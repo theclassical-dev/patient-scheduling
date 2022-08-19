@@ -8,6 +8,8 @@ Use App\Models\Certificate;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\CertificateImport;
 Use App\Models\Admin;
+Use App\Models\Appointment;
+Use App\Models\Doctor;
 Use App\Models\User;
 use Carbon\Carbon;
 use DB;
@@ -32,62 +34,56 @@ class AdminController extends Controller
     public function index(Request $request)
     {
 
-        return view('admin/dashboard');
+        $user = DB::select("SELECT * FROM users ORDER BY id DESC");
+        $request = DB::select("SELECT * FROM appointments WHERE status = 0");
+        $booked = DB::select("SELECT * FROM appointments WHERE status = 1");
+        // $request = Appointment::where('status', '0');
+        // $booked = Appointment::where('status', '1')->first();
+        return view('admin/dashboard', compact('user','request', 'booked',));
     }
 
-    public function verification(Request $request){
+    public function schedule(Request $request){
 
-        if(isset($_POST['create'])){
-            $request->validate([
-                'name' => 'required',
-                'organization' => 'required',
-            ]);
-            
-            // $app = date('d-m-Y H:i:s');
-            
-
-            $d = User::create([
-                'name' => $request->input('name'),
-                'organization' => $request->input('organization'),
-                // 'status' => $request->input('status'),
-            ]);
-
-            if($d){
-                return back()->with("success", "Certificate Successfully Added");
-            }else{
-
-                return back()->with("error", "error");
-            }
-
-        }
-
-        if(isset($_POST['upload'])){
-            $request->validate([
-                '_file' => 'required|max:10000|mimes:xlsx,xls,csv',
-            ]);
-            if($request->hasFile('_file')){
-                
-                Excel::import(new CertificateImport,$request->file('_file'));
-                return back()->with('success', 'Record Successfully imported');
-            }
-                return back()->with('error', 'Error');
-        }
-
+       
         if(isset($_POST['update'])){
             $request->validate([
-                'name' => 'required',
-                'organization' => 'required',
+                'date' => 'required',
+                'time' => 'required',
             ]);
 
-            $update = User::find($request->id);
+            $update = Appointment::find($request->id);
             if($update){
-                $ind['uuid'] =$request->get('uuid');
-                $ind['name'] =$request->get('name');
-                $ind['organization'] = $request->get('organization');
+                $ind['doctor'] =$request->get('doctor');
+                $ind['date'] =$request->get('date');
+                $ind['time'] =$request->get('time');
+                $ind['status'] = 1;
 
                 $update->update($ind);
 
-                return back()->with('success', 'Record Successfully Updated');
+                $to = '+2348098626399';
+                    $from = getenv("TWILIO_FROM");
+                    $message = 'Hello Mr/Mrs '.$update->firstname.', Your Apointment has been scheduled to, Date: '
+                        . date('d/F/Y', strtotime($request->date)).' Time:'.date('H:i', strtotime($request->time));
+                    //open connection
+            
+                    $ch = curl_init();
+            
+                    //set the url, number of POST vars, POST data
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                    curl_setopt($ch, CURLOPT_USERPWD, getenv("TWILIO_SID").':'.getenv("TWILIO_TOKEN"));
+                    curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+                    curl_setopt($ch, CURLOPT_URL, sprintf('https://api.twilio.com/2010-04-01/Accounts/'.getenv("TWILIO_SID").'/Messages.json', getenv("TWILIO_SID")));
+                    curl_setopt($ch, CURLOPT_POST, 3);
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, 'To='.$to.'&From='.$from.'&Body='.$message);
+            
+                    // execute post
+                    $result = curl_exec($ch);
+                    $result = json_decode($result);
+            
+                    // close connection
+                    curl_close($ch);
+
+                return back()->with('success', 'Appointment successfully scheduled');
             }
         }
 
@@ -96,7 +92,7 @@ class AdminController extends Controller
                 'id' => 'required'
             ]);
 
-            $r = Certificate::find($request->id);
+            $r = Appointment::find($request->id);
             if($r){
                
                 $r->delete($r);
@@ -106,43 +102,24 @@ class AdminController extends Controller
             }
             
         }
-        if(isset($_POST['verify'])){
-            $request->validate([
-                'id' => 'required'
-            ]);
 
-            $app = $request->date;
-            $uuid = chr(rand(65, 90)).rand(3000,100000).date('y');
 
-            $r = User::find($request->id);
-            if($r){
-               
-                $r->update(['uuid'=>$uuid,'status' => 'verified', 'date' => Carbon::now()->format('d/F/Y')]);
-                return back()->with('success', 'Successfully Verified');
-            }else{
-                return back()->with('error','server error');
-            }
-            
-        }
-       
-        return view('admin/verification');
+       $d = Doctor::all();
+        return view('admin/request', compact('d'));
     }
 
-    public function admins(Request $request) {
+    public function doctor(Request $request) {
 
         if(isset($_POST['create'])){
             $request->validate([
                 'name' => 'required',
-                'role' => 'required',
-                'email' => 'required',
-                'password' => 'required',
+                'department' => 'required',
+               
             ]);
             
-            $d = Admin::create([
+            $d = Doctor::create([
                 'name' => $request->input('name'),
-                'role' => $request->input('role'),
-                'email' => $request->input('email'),
-                'password' => $request->input('password'),
+                'department' => $request->input('department'),
             ]);
 
             if($d){
@@ -157,17 +134,13 @@ class AdminController extends Controller
         if(isset($_POST['update'])){
             $request->validate([
                 'name' => 'required',
-                'role' => 'required',
-                'email' => 'required',
-                'password' => 'required',
+                'department' => 'required',
             ]);
 
-            $update = Admin::find($request->id);
+            $update = Doctor::find($request->id);
             if($update){
                 $ind['name'] =$request->get('name');
-                $ind['role'] = $request->get('role');
-                $ind['email'] = $request->get('email');
-                $ind['password'] = $request->get('password');
+                $ind['department'] = $request->get('department');
 
                 $update->update($ind);
 
@@ -180,7 +153,7 @@ class AdminController extends Controller
                 'id' => 'required'
             ]);
 
-            $r = Admin::find($request->id);
+            $r = Doctor::find($request->id);
             if($r){
                
                 $r->delete($r);
@@ -191,25 +164,53 @@ class AdminController extends Controller
             
         }
 
-        return view('admin/admins');
+        return view('admin/doctor');
     }
 
-    public function users(Request $request){
-        if(isset($_POST['delete'])){
+    public function attendance(Request $request){
+        if(isset($_POST['update'])){
             $request->validate([
-                'id' => 'required'
+               'id' => 'required'
             ]);
 
-            $r = User::find($request->id);
-            if($r){
-               
-                $r->delete($r);
-                return back()->with('success', 'Record Successfully Deleted');
-            }else{
-                return back()->with('error','server error');
+            $update = Appointment::find($request->id);
+
+            if($update){
+
+                $ind['attendance'] =$request->get('attendance');
+
+                $update->update($ind);
+
+                if($request->get('attendance') == 'Missed'){
+
+                $to = '+2348098626399';
+                $from = getenv("TWILIO_FROM");
+                $message = 'Hello Mr/Mrs '.$update->firstname.', You missed your Appointment scheduled for Date: '
+                    . date('d/F/Y', strtotime($update->date)).', Time:'.date('H:i', strtotime($update->time));
+                //open connection
+        
+                $ch = curl_init();
+        
+                //set the url, number of POST vars, POST data
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_USERPWD, getenv("TWILIO_SID").':'.getenv("TWILIO_TOKEN"));
+                curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+                curl_setopt($ch, CURLOPT_URL, sprintf('https://api.twilio.com/2010-04-01/Accounts/'.getenv("TWILIO_SID").'/Messages.json', getenv("TWILIO_SID")));
+                curl_setopt($ch, CURLOPT_POST, 3);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, 'To='.$to.'&From='.$from.'&Body='.$message);
+        
+                // execute post
+                $result = curl_exec($ch);
+                $result = json_decode($result);
+        
+                // close connection
+                curl_close($ch);                
+                }
+
+
+                return back()->with('success', 'successfully updated');
             }
-            
         }
-        return view('admin/users');
+        return view('admin/attendance');
     }
 }

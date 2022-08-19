@@ -16,18 +16,9 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = [
-        'uuid',
-        'name',
-        'email',
-        'organization',
-        'mobile',
-        'payment',
-        'status',
-        'date',
-        'is_admin',
-        'password',
-    ];
+
+
+    protected $guarded = [];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -50,6 +41,10 @@ class User extends Authenticatable
 
     public function certificate(){
         return $this->hasMany(Certificate::class, 'user_name');
+    }
+
+    public function appointment(){
+        return $this->hasMany(Appointment::class, 'user_id');
     }
 
     // public function isAdmin()

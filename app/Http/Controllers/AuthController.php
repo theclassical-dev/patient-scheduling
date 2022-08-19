@@ -47,22 +47,21 @@ class AuthController extends Controller
         if(isset($_POST['register'])) 
         {
                 $request->validate([
-                'name'=> 'required|unique:users,name',
-                'email'=>'required|unique:users,email',
-                'organization'=>'required',
-                'mobile'=>'required',
+                'firstname'=>'required|string',
+                'lastname'=>'required|string',
+                'email'=>'required|email',
+                'phone'=>'required|numeric',
                 'password'=>'required|string',   
                 'password_confirmation'=>'required|string',   
             ]);
         
-            // $uuid = rand(300000,100000);
 
             $user = User::create([
-                // 'uuid'=>$uuid,
-                'name'=>$request->input('name'),
+              
+                'firstname'=>$request->input('firstname'),
+                'lastname'=>$request->input('lastname'),
                 'email'=>$request->input('email'),
-                'organization'=>$request->input('organization'),
-                'mobile'=>$request->input('mobile'),
+                'phone'=>$request->input('phone'),
                 'password'=>$request->input('password'),
             ]);
             if ($user) {

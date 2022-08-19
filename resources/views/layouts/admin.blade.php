@@ -9,7 +9,7 @@
 	<meta name="author" content="">
 	<link rel="icon" href="">
 
-	<title>Verification</title>
+	<title>Appointment</title>
 
 	<!-- Vendors Style-->
 	<link rel="stylesheet" href="{{ asset('css/vendors_css.css')}}">
@@ -104,20 +104,20 @@
                         <span>DASHBOARD</span>  </a>
 					</li>
 					<li>
-						<a href="{{ route('admin.verification') }}" title="">
+						<a href="{{ route('admin.request') }}" title="">
                        <i class="fa fa-barcode"><span class="path1"></span><span class="path2"></span></i>
-                        <span>VERIFICATION</span>  </a>
+                        <span>SET APPOINTMENT</span>  </a>
 					</li>
 					<li>
-						<a href="{{ route('admin.users') }}" title="">
+						<a href="{{ route('admin.attendance') }}" title="">
                        <i class="fa fa-users"><span class="path1"></span><span class="path2"></span></i>
-                        <span>MANAGE USERS</span>  </a>
+                        <span>ATTENDANCE</span>  </a>
 					</li>
 					
 					<li>
-						<a href="{{ route('admin.admins') }}" title="">
+						<a href="{{ route('admin.doctor') }}" title="">
                        <i class="fa fa-id-badge"><span class="path1"></span><span class="path2"></span></i>
-                        <span>MANAGE ADMINS</span>  </a>
+                        <span>ADD DOCTORS</span>  </a>
 					</li>
 					<li>
 						<a href="{{route('logout')}}" title=""

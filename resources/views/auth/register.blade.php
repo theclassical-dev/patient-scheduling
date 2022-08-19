@@ -29,19 +29,34 @@
 					<div class="col-lg-5 col-md-5 col-12">
 						<div class="bg-white rounded30 shadow-lg">
 							<div class="content-top-agile p-20 pb-0">
-								<h2 class="text-primary">Certificate Verification Portal</h2>						
+                                <h2 class="text-primary">Design and Implementation <br>Of An<br> Online Appointment And Scheduling System.</h2>						
+					
 							</div>
 							<div class="p-40">
 								<form action="" method="post">
                                     @csrf
 									<div class="form-group">
-                                        <label>Fullname *</label>  
+                                        <label>Fistname *</label>  
                                         <div class="input-group mb-3">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text bg-transparent"><i class="ti-user"></i></span>
                                             </div>
-                                            <input type="text" class="form-control pl-15 bg-transparent @error('name') is-invalid @enderror" placeholder="Fullname" name="name">
-                                            @error('name')
+                                            <input type="text" class="form-control pl-15 bg-transparent @error('firstname') is-invalid @enderror" placeholder="Firstname" name="firstname">
+                                            @error('firstname')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Lastname *</label>  
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text bg-transparent"><i class="ti-user"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control pl-15 bg-transparent @error('lastname') is-invalid @enderror" placeholder="lastname" name="lastname">
+                                            @error('lastname')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
@@ -64,27 +79,13 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label>Organization *</label>  
+                                        <label>Mobile Number*</label>  
                                         <div class="input-group mb-3">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text bg-transparent"><i class="ti-user"></i></span>
                                             </div>
-                                            <input type="text" class="form-control pl-15 bg-transparent @error('organization') is-invalid @enderror" placeholder="organization" name="organization">
-                                            @error('organization')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Mobile Number *</label>  
-                                        <div class="input-group mb-3">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text bg-transparent"><i class="ti-user"></i></span>
-                                            </div>
-                                            <input type="text" class="form-control pl-15 bg-transparent @error('mobile') is-invalid @enderror" placeholder="mobile" name="mobile">
-                                            @error('mobile')
+                                            <input type="text" class="form-control pl-15 bg-transparent @error('phone') is-invalid @enderror" placeholder="phone" name="phone">
+                                            @error('phone')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>

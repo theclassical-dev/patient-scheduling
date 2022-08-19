@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.front')
 
 @section('content')
 <script type="text/javascript">
@@ -60,8 +60,7 @@
 		@include("layouts.msg")
 		<div class="box">
 			<div class="box-header with-border">
-				<h3 class="box-title">Admins</h3>
-				<button class="btn btn-primary" data-toggle="modal" data-target="#md-create" style="float:right;">Add Admin</button>
+				<h3 class="box-title">Notifications</h3>
 			</div>
 			<!-- /.box-header -->
 			<div class="box-body">
@@ -69,15 +68,20 @@
 					<table id="dp" class="table table-bordered table-striped">
 						<thead>
 							<th>S/N</th>
-							<th>Actions</th>
-							<th>Name</th>
-							<th>Role</th>
+							<th>First Name</th>
+							<th>Last Name</th>
 							<th>Email</th>
-							<th>Password</th>
+							<th>Phone Number</th>
+							<th>Address</th>
+							<th>illness Type</th>
+							<th>Appointment Date</th>
+							<th>Assigned Doctor</th>
+							<th>Status</th>
+							<th>Attendance</th>
 						</thead>
 						<tbody>
 							@php
-                                $q = DB::select("SELECT * FROM admins ORDER BY id");
+                                $q = DB::select("SELECT * FROM appointments ORDER BY id");
                             @endphp
                             @forelse($q as $r)
 	                            @php
@@ -85,16 +89,37 @@
 	                            @endphp
                             	<tr>
 									<td>{{ $loop->iteration }}</td>
-									<td>
-										<button class="btn btn-primary btn-sm edtBtn" data-all="{{ (json_encode($r)) }}"><i class="fa fa-edit"></i></button>
-										<button class="btn btn-danger btn-sm delBtn" data-all="{{ (json_encode($x)) }}"><i class="fa fa-trash"></i></button>
-									</td>
-									<td>{{ $r->name}}</td>
-									<td>{{ $r->role}}</td>
+									<td>{{ $r->firstname}}</td>
+									<td>{{ $r->lastname}}</td>
 									<td>{{ $r->email}}</td>
-									<td>{{ $r->password}}</td>
-									
-								</tr>
+                                    <td>{{ $r->phone}}</td>
+                                    <td>{{ $r->address}}</td>
+									<td>{{ $r->disease}}</td>
+                                    <td>
+                                    @if ($r->date != null)
+                                        {{date('d F Y', strtotime($r->date)). ' '.$r->time}}
+                                    @else
+                                       --------
+                                    @endif
+									@if ($r->doctor != null)
+									<td>{{ $r->doctor}}</td>
+									@else
+									<td>--------</td>
+									@endif
+                                    </td>
+                                    @if ($r->date == null)
+										<td><h5 class="font-weight-600 mb-0 badge badge-pill badge-warning">processing..</h5></td>
+                                    @else
+										<td><h5 class="font-weight-600 mb-0 badge badge-pill badge-success">booked</h5></td>
+                                    @endif
+                                    <td>
+                                        @if ($r->attendance != null)
+                                        {{$r->attendance}}
+                                        @else
+                                            --------
+                                        @endif</td>
+                                        
+                                    </tr>
                             @empty
 
                             @endforelse
@@ -217,4 +242,4 @@
 	</div>
 </div>
 <!-- /.modal -->
-@endsection
+@endsection 

@@ -29,15 +29,14 @@ Route::any('/register', [AuthController::class,'register'])->name('register');
 
 Route::prefix('admin')->group(function(){
     Route::any('/', [AdminController::class,'index'])->name('admin.dashboard');
-    Route::any('/verification', [AdminController::class,'verification'])->name('admin.verification');
-    Route::any('/admins', [AdminController::class,'admins'])->name('admin.admins');
-    Route::any('/users', [AdminController::class,'users'])->name('admin.users');
+    Route::any('/set-appointment', [AdminController::class,'schedule'])->name('admin.request');
+    Route::any('/add-doctors', [AdminController::class,'doctor'])->name('admin.doctor');
+    Route::any('/attendance', [AdminController::class,'attendance'])->name('admin.attendance');
 });
 Route::prefix('user')->group(function(){
     Route::any('/', [HomeController::class,'index'])->name('user.dashboard');
-    Route::any('/search', [HomeController::class,'search'])->name('user.search');
-    Route::any('/payments', [HomeController::class,'payment'])->name('user.payment');
-    Route::any('/certificates/{id}', [HomeController::class,'certificates'])->name('user.certificates');
+    Route::any('/notification', [HomeController::class,'notify'])->name('user.notify');
+
 });
 
 

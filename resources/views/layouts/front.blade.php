@@ -9,7 +9,7 @@
 	<meta name="author" content="">
 	<link rel="icon" href="">
 
-	<title>Verification</title>
+	<title>Appointment</title>
 
 	<!-- Vendors Style-->
 	<link rel="stylesheet" href="{{ asset('css/vendors_css.css')}}">
@@ -102,6 +102,11 @@
 						<a href="{{ route('user.dashboard') }}" title="">
                        <i class="fa fa-dashboard"><span class="path1"></span><span class="path2"></span></i>
                         <span>DASHBOARD</span>  </a>
+					</li>
+					<li>
+						<a href="{{ route('user.notify') }}" title="">
+                       <i class="fa fa-dashboard"><span class="path1"></span><span class="path2"></span></i>
+                        <span>NOTIFICATION</span>  </a>
 					</li>
 					<li>
 						<a href="{{route('logout')}}" title=""

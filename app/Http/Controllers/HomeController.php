@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Appointment;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -24,51 +26,49 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
-        if(isset($_POST['pay'])){
-            $request->validate([
-                'a'=> 'required',
-                'b'=> 'required',
-                'c'=> 'required',
+        $user = Auth::guard("user")->user();
+        
+        if(isset($_POST['book'])){
+            $this->validate($request,[
+                'firstname'=> 'required',
+                'lastname'=> 'required',
+                'email'=>   'required',
+                'phone'=>'required',
+                'address'=> 'required',
+                'disease'=> 'required',
             ]);
 
-            $user = User::find($request->id);
-            if($user){
-                $user->update(['payment'=>'paid']);
-                return redirect()->route('user.search');
+            $book = Appointment::create([
+                'user_id'=>auth()->user()->id,
+                'firstname' => $request->input('firstname'),
+                'lastname'=> $request->input('lastname'),
+                'email'=> $request->input('email'),
+                'phone' => $request->input('phone'),
+                'address'=> $request->input('address'),
+                'disease'=> $request->input('disease'),
+                'description'=> $request->input('description'),
+            ]);
+
+            if($book){
+
+                return back()->with('success','You have successfully booked an appointment date & time will be communicated through the provided contact');
+            }else{
+                return back()->with('error','There was an error booking your appointment. Please try again later.');
             }
         }
-        $user = auth()->user();
 
-        return view('user/dashboard')->with('user', $user);
+        $block = auth()->user()->appointment()->first();
+        return view('user/dashboard', compact('block'));
     }
 
-    public function search(Request $request){
-
-        return view('user/search');
-    }
     
-    public function certificates($id){
+    public function notify(Request $request){
 
-        $user = auth()->user();
+        $user = Auth::guard("user")->user();
+
+        
         // $check = auth()->user()->certificate()->find($id);
-        return view('user/certificates')->with('user', $user);
+        return view('user/notification');
     }
 
-    public function payment(Request $request) {
-
-        if(isset($_POST['pay'])){
-            $request->validate([
-                'a'=> 'required',
-                'b'=> 'required',
-                'c'=> 'required',
-            ]);
-
-            $user = User::find($request->id);
-            if($user){
-                $user->update(['payment'=>'paid']);
-                return redirect()->route('user.search');
-            }
-        }
-        return view('user/payment');
-    }
 }
