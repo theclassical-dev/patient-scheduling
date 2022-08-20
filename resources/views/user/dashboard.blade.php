@@ -70,16 +70,15 @@
                   <button type="button" class="btn btn-rounded btn-warning btn-outline mr-1">
                     <i class="ti-trash"></i> Cancel
                   </button>
-                  {{-- @if ($block : $block->status != 0 ?? '') --}}
+                  @if ($block->status != 0 )
                   <button type="submit" class="btn btn-rounded btn-primary btn-outline" name="book">
                     <i class="ti-save-alt"></i> Save
                   </button>
-                  {{-- @else --}}
-                  {{-- <button type="submit" class="btn btn-rounded btn-primary btn-outline" disabled>
+                  @else
+                  <button type="submit" class="btn btn-rounded btn-primary btn-outline" disabled>
                     <i class="ti-save-alt"></i> Save
-                  </button> --}}
-                  
-                  {{-- @endif --}}
+                  </button>
+                  @endif
                   
               </div>  
           </form>
