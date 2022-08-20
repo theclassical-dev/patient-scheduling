@@ -9,7 +9,7 @@
 	<meta name="author" content="">
 	<link rel="icon" href="">
 
-	<title>Certificate Records</title>
+	<title>Appointments</title>
 
 	<!-- Vendors Style-->
 	<link rel="stylesheet" href="{{ asset('css/vendors_css.css')}}">
