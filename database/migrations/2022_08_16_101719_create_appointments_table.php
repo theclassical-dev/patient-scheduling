@@ -23,6 +23,7 @@ class CreateAppointmentsTable extends Migration
             $table->string('address');
             $table->string('disease');
             $table->string('description')->nullable();
+            $table->string('doctor')->nullable();
             $table->string('date')->nullable();
             $table->string('time')->nullable();
             $table->string('status')->default(0);
