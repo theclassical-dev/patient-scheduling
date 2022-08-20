@@ -70,7 +70,7 @@
                   <button type="button" class="btn btn-rounded btn-warning btn-outline mr-1">
                     <i class="ti-trash"></i> Cancel
                   </button>
-                  @if ($block->status != 0 ?? '')
+                  @if ($block : $block->status != 0 ?? '')
                   <button type="submit" class="btn btn-rounded btn-primary btn-outline" name="book">
                     <i class="ti-save-alt"></i> Save
                   </button>
