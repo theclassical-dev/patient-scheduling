@@ -57,7 +57,7 @@ class HomeController extends Controller
             }
         }
 
-        $block = auth()->user()->appointment()->first();
+        $block = auth()->user()->appointment()->get();
         return view('user/dashboard', compact('block'));
     }
 
@@ -68,7 +68,8 @@ class HomeController extends Controller
 
         
         // $check = auth()->user()->certificate()->find($id);
-        return view('user/notification');
+        $q = auth()->user()->appointment()->get();
+        return view('user/notification', compact('q'));
     }
 
 }

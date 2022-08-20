@@ -81,49 +81,50 @@
 						</thead>
 						<tbody>
 							@php
-                                $q = DB::select("SELECT * FROM appointments ORDER BY id");
+                                // $q = 
                             @endphp
-                            @forelse($q as $r)
-	                            @php
-	                                $x['id'] = $r->id;
-	                            @endphp
-                            	<tr>
-									<td>{{ $loop->iteration }}</td>
-									<td>{{ $r->firstname}}</td>
-									<td>{{ $r->lastname}}</td>
-									<td>{{ $r->email}}</td>
-                                    <td>{{ $r->phone}}</td>
-                                    <td>{{ $r->address}}</td>
-									<td>{{ $r->disease}}</td>
-                                    <td>
-                                    @if ($r->date != null)
-                                        {{date('d F Y', strtotime($r->date)). ' '.$r->time}}
-                                    @else
-                                       --------
-                                    @endif
-									@if ($r->doctor != null)
-									<td>{{ $r->doctor}}</td>
-									@else
-									<td>--------</td>
-									@endif
-                                    </td>
-                                    @if ($r->date == null)
-										<td><h5 class="font-weight-600 mb-0 badge badge-pill badge-warning">processing..</h5></td>
-                                    @else
-										<td><h5 class="font-weight-600 mb-0 badge badge-pill badge-success">booked</h5></td>
-                                    @endif
-                                    <td>
-                                        @if ($r->attendance != null)
-                                        {{$r->attendance}}
-                                        @else
-                                            --------
-                                        @endif</td>
-                                        
-                                    </tr>
-                            @empty
+							{{-- @if($q != null) --}}
+								@forelse($q as $r)
+									@php
+										$x['id'] = $r->id;
+									@endphp
+									<tr>
+										<td>{{ $loop->iteration }}</td>
+										<td>{{ $r->firstname}}</td>
+										<td>{{ $r->lastname}}</td>
+										<td>{{ $r->email}}</td>
+										<td>{{ $r->phone}}</td>
+										<td>{{ $r->address}}</td>
+										<td>{{ $r->disease}}</td>
+										<td>
+										@if ($r->date != null)
+											{{date('d F Y', strtotime($r->date)). ' '.$r->time}}
+										@else
+										--------
+										@endif
+										@if ($r->doctor != null)
+										<td>{{ $r->doctor}}</td>
+										@else
+										<td>--------</td>
+										@endif
+										</td>
+										@if ($r->date == null)
+											<td><h5 class="font-weight-600 mb-0 badge badge-pill badge-warning">processing..</h5></td>
+										@else
+											<td><h5 class="font-weight-600 mb-0 badge badge-pill badge-success">booked</h5></td>
+										@endif
+										<td>
+											@if ($r->attendance != null)
+											{{$r->attendance}}
+											@else
+												--------
+											@endif</td>
+											
+										</tr>
+								@empty
 
-                            @endforelse
-							
+								@endforelse
+							{{-- @endif --}}
 						</tbody>
 					</table>
 				</div>
